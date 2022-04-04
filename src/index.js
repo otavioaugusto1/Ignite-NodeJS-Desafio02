@@ -11,14 +11,35 @@ const users = [];
 
 function checksExistsUserAccount(request, response, next) {
   // Complete aqui
+  const {username} = request.headers;
+
+  const user = users.find(user => user.username === username)
+
+  if(!user){
+    return response.status(404).json({error:"Username not found"})
+  }
+  request.user = user;
+  return next();
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
   // Complete aqui
+  const {user} = request;
+  if(user.pro === false && user.todos.length() == 10){
+    return response.status(403).json({error:"Todos cheios"})
+  }
+  if (user.pro){
+    return next();
+  }
+  if(user.pro === false && user.todos.length() < 10){
+    return next();
+  }
 }
 
 function checksTodoExists(request, response, next) {
   // Complete aqui
+  const {username} = request.headers;
+  const {id} = request.params;
 }
 
 function findUserById(request, response, next) {
